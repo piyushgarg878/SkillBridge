@@ -30,33 +30,37 @@ export default function SignUpPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+      <Card className="w-full max-w-md shadow-xl border-2 border-blue-100">
+        <CardHeader className="flex flex-col items-center gap-2 pb-2">
+          <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center mb-2">
+            <span className="text-white font-bold text-2xl">S</span>
+          </div>
+          <CardTitle className="text-2xl font-bold text-center">Sign Up for SkillBridge</CardTitle>
+          <span className="text-gray-500 text-sm text-center">Create your account to get started</span>
         </CardHeader>
         <CardContent>
           {error && <p className="text-red-500 mb-2 text-center">{error}</p>}
           <form className="space-y-4" onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          required
-          value={formData.email}
-          onChange={handleChange}
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              required
+              value={formData.email}
+              onChange={handleChange}
               className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          required
-          value={formData.password}
-          onChange={handleChange}
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              required
+              value={formData.password}
+              onChange={handleChange}
               className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors">Sign Up</button>
-      </form>
+            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors font-semibold">Sign Up</button>
+          </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center gap-2">
           <span className="text-sm text-gray-500">Already have an account?</span>
