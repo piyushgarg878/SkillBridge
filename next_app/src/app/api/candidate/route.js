@@ -1,0 +1,15 @@
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+
+export async function GET(req) {
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get('userId');
+  if (!userId) {
+    return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
+  }
+  const candidate = await prisma.candidate.findUnique({ where: { userId } });
+  if (!candidate) {
+    return NextResponse.json({ candidate: null }, { status: 200 });
+  }
+  return NextResponse.json({ candidate });
+} 
