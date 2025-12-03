@@ -1,11 +1,11 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from summarize_resume import summarize_resume
-import fitz  
-from sentence_transformers import SentenceTransformer, util
+import fitz
 import google.generativeai as genai
 from dotenv import load_dotenv
 import os
+import numpy as np
 
 load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -24,12 +24,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
-
 def extract_text_from_pdf(file: UploadFile) -> str:
     content = file.file.read()
     with fitz.open(stream=content, filetype="pdf") as doc:
         return " ".join([page.get_text() for page in doc])
+
+def get_embedding(text: str):
+    result = genai.embed_content(
+        model="models/text-embedding-004",
+        content=text,
+        task_type="semantic_similarity"
+    )
+    return result['embedding']
+
+def cosine_similarity(v1, v2):
+    return np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
 
 @app.post("/match")
 async def match_resume(
@@ -39,9 +48,14 @@ async def match_resume(
     resume_text = extract_text_from_pdf(resume)
     summary = summarize_resume(resume_text)
 
-    embeddings = model.encode([summary, job_description], convert_to_tensor=True)
-    similarity = util.cos_sim(embeddings[0], embeddings[1]).item()
+    # Get embeddings using Gemini
+    emb1 = get_embedding(summary)
+    emb2 = get_embedding(job_description)
+
+    # Calculate similarity
+    similarity = cosine_similarity(emb1, emb2)
     score = round(similarity * 100, 2)
+    
     print("received")
     return {
         "summary": summary,
