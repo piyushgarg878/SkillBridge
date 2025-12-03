@@ -8,7 +8,11 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-genai.configure(api_key="AIzaSyCNnBduoWYaFI7qOFixuM6e9EKa2XVYj1I")
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+if not GOOGLE_API_KEY:
+    print("Warning: GOOGLE_API_KEY not found in environment variables.")
+
+genai.configure(api_key=GOOGLE_API_KEY)
 
 app = FastAPI()
 
