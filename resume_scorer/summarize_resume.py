@@ -18,7 +18,7 @@ Resume:
 {resume_text}
 \"\"\"
 """
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.0-flash")
     chat = model.start_chat()
     response = chat.send_message(prompt)
     return response.text
