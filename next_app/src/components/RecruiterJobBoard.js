@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { Pencil, Trash2, Plus, X, Users, ExternalLink, BarChart, Briefcase, BadgeCheck, MoreVertical } from 'lucide-react';
+import { Pencil, Trash2, Plus, X, Users, ExternalLink, BarChart, Briefcase, BadgeCheck, MoreVertical, MapPin, DollarSign, Calendar, Building2 } from 'lucide-react';
 import ApplicationSummaryDialog from './ApplicationSummaryDialog';
 import { useRouter } from 'next/navigation';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
@@ -178,128 +178,348 @@ export default function RecruiterJobBoard({ userId }) {
   if (!recruiter) return <div className="p-8 text-center">You are not a recruiter or onboarding incomplete.</div>;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-transparent py-10 px-2 w-full">
-      {/* Welcome message outside the main card */}
-      <div className="w-full max-w-5xl text-center mb-8 mt-2">
-        <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white block">Welcome{recruiter?.name ? `, ${recruiter.name}` : ''}!</span>
-        <span className="block text-lg text-gray-500 dark:text-gray-300 mt-2">Manage your jobs and applicants below.</span>
-      </div>
-      <Card className="w-full max-w-5xl shadow-xl border border-blue-200 dark:border-gray-700 p-0 bg-white dark:bg-gray-800">
-        <CardHeader className="flex flex-col items-center gap-2 pb-2">
-          
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-between items-center mb-8 mt-2">
-            <h2 className="text-2xl font-semibold">Your Jobs</h2>
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow flex items-center gap-2" onClick={openCreateForm}>
-              <Plus className="w-5 h-5" /> Create Job
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-950 dark:to-gray-900">
+      <div className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="text-center sm:text-left">
+              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+                Welcome{recruiter?.name ? `, ${recruiter.name}` : ''}! 👋
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Manage your job postings and track applicants
+              </p>
+            </div>
+            <button 
+              className="btn-primary group flex items-center gap-2 px-6 py-3 text-lg shadow-strong"
+              onClick={openCreateForm}
+            >
+              <Plus className="w-5 h-5" />
+              Create New Job
             </button>
           </div>
-          <Dialog open={showForm} onOpenChange={setShowForm}>
-            <DialogContent className="p-0 max-w-lg">
-              {/* DialogTitle must be a direct child for accessibility */}
-              <DialogTitle className="sr-only">{editJobId ? 'Edit Job' : 'Create Job'}</DialogTitle>
-              <Card className="shadow-lg border">
-                <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle>{editJobId ? 'Edit Job' : 'Create Job'}</CardTitle>
-                  <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-700"><X className="w-5 h-5" /></button>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-4" onSubmit={handleSubmit}>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Job Name</label>
-                      <input name="jobName" value={form.jobName} onChange={handleChange} placeholder="Job Name" className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 bg-blue-50" required />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Job Role</label>
-                      <input name="jobRole" value={form.jobRole} onChange={handleChange} placeholder="Job Role" className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 bg-blue-50" required />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Job Description</label>
-                      <textarea name="jobDescription" value={form.jobDescription} onChange={handleChange} placeholder="Job Description" className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 bg-blue-50" required />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Requirements</label>
-                      <textarea name="requirements" value={form.requirements} onChange={handleChange} placeholder="Requirements" className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 bg-blue-50" required />
-                    </div>
-                    <div className="flex gap-2">
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium mb-1">Location</label>
-                        <input name="location" value={form.location} onChange={handleChange} placeholder="Location" className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 bg-blue-50" />
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-sm font-medium mb-1">Salary</label>
-                        <input name="salary" value={form.salary} onChange={handleChange} placeholder="Salary" className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 bg-blue-50" />
-                      </div>
-                    </div>
-                    {error && <div className="text-red-500 text-sm">{error}</div>}
-                    <div className="flex gap-2 justify-end mt-2">
-                      <button type="button" className="bg-gray-300 text-gray-700 px-4 py-2 rounded" onClick={() => setShowForm(false)}>Cancel</button>
-                      <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-2" disabled={loading}>
-                        {loading && <span className="animate-spin mr-1 w-4 h-4 border-2 border-white border-t-transparent rounded-full"></span>}
-                        {editJobId ? 'Save' : 'Create Job'}
-                      </button>
-                    </div>
-                  </form>
-                </CardContent>
-              </Card>
-            </DialogContent>
-          </Dialog>
-          <div className="rounded-xl shadow bg-gradient-to-br from-blue-100 to-blue-200 dark:from-gray-800 dark:to-gray-900 p-8">
-            {jobs.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-16">
-                <BadgeCheck className="w-16 h-16 text-blue-200 mb-4" />
-                <div className="text-gray-400 text-lg">No jobs created yet. Click "Create Job" to get started!</div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Stats Section */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                <Briefcase className="w-6 h-6 text-white" />
               </div>
-            ) : (
-              <ul className="grid gap-8 md:grid-cols-2">
-                {jobs.map(job => (
-                  <Card key={job.id} className="border rounded-lg shadow hover:shadow-lg transition-shadow p-5 bg-white dark:bg-gray-900">
-                    <CardHeader className="flex flex-row items-start justify-between pb-2">
-                      <div className="flex flex-col gap-1">
-                        <CardTitle className="font-bold text-lg truncate">{job.jobName}</CardTitle>
-                        <span className="text-xs text-blue-600 bg-blue-50 dark:bg-gray-800 dark:text-blue-300 rounded px-2 py-1 w-fit mt-1">Open</span>
-                      </div>
-                      <div className="flex gap-2 mt-1 flex-nowrap">
+              <div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">{jobs.length}</div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Jobs</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {jobs.reduce((total, job) => total + (job.applications?.length || 0), 0)}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Total Applications</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <BarChart className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {jobs.filter(job => job.status === 'open').length}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">Active Jobs</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-soft border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {jobs.filter(job => new Date(job.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)).length}
+                </div>
+                <div className="text-sm text-gray-600 dark:text-gray-400">This Week</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Jobs Grid */}
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Your Job Postings</h2>
+            <div className="text-sm text-gray-600 dark:text-gray-400">
+              {jobs.length} job{jobs.length !== 1 ? 's' : ''} posted
+            </div>
+          </div>
+
+          {jobs.length === 0 ? (
+            <div className="bg-white dark:bg-gray-800 rounded-3xl p-16 text-center shadow-soft border border-gray-100 dark:border-gray-700">
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Briefcase className="w-12 h-12 text-blue-600 dark:text-blue-400" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">No jobs created yet</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
+                Start building your dream team by creating your first job posting. 
+                Our AI-powered platform will help you find the perfect candidates.
+              </p>
+              <button 
+                className="btn-primary group flex items-center gap-2 px-8 py-4 text-lg mx-auto"
+                onClick={openCreateForm}
+              >
+                <Plus className="w-6 h-6" />
+                Create Your First Job
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+              {jobs.map(job => (
+                <Card key={job.id} className="card-enhanced card-hover group overflow-hidden border-0 shadow-soft hover:shadow-strong">
+                  <div className="relative">
+                    {/* Status Badge */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <span className="status-badge status-open">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        Active
+                      </span>
+                    </div>
+                    
+                    {/* Header */}
+                    <CardHeader className="pb-4 border-b border-gray-100 dark:border-gray-700">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
+                            {job.jobName}
+                          </CardTitle>
+                          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 mb-2">
+                            <Building2 className="w-4 h-4" />
+                            <span className="font-medium">{job.jobRole}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Action Menu */}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800" title="More actions">
-                              <MoreVertical className="w-5 h-5" />
+                            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 focus-enhanced" title="More actions">
+                              <MoreVertical className="w-5 h-5 text-gray-500" />
                             </button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openEditForm(job)}>
-                              <Pencil className="w-4 h-4 mr-2" /> Edit
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem onClick={() => openEditForm(job)} className="cursor-pointer">
+                              <Pencil className="w-4 h-4 mr-2" /> Edit Job
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDelete(job.id)} disabled={loading}>
-                              <Trash2 className="w-4 h-4 mr-2" /> Delete
+                            <DropdownMenuItem onClick={() => { setSelectedJobId(job.id); setShowApplicants(true); }} className="cursor-pointer">
+                              <Users className="w-4 h-4 mr-2" /> View Applicants
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => { setSelectedJobId(job.id); setShowApplicants(true); }}>
-                              <Users className="w-4 h-4 mr-2" /> Applicants
+                            <DropdownMenuItem onClick={() => router.push(`/dashboard/${job.id}`)} className="cursor-pointer">
+                              <BarChart className="w-4 h-4 mr-2" /> Analytics
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => router.push(`/dashboard/${job.id}`)}>
-                              <BarChart className="w-4 h-4 mr-2" /> Summary
+                            <DropdownMenuItem onClick={() => handleDelete(job.id)} disabled={loading} className="cursor-pointer text-red-600 dark:text-red-400">
+                              <Trash2 className="w-4 h-4 mr-2" /> Delete Job
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <div className="text-gray-800 dark:text-gray-200 font-medium mb-1">Role: <span className="font-normal">{job.jobRole}</span></div>
-                      <div className="text-gray-800 dark:text-gray-200 font-medium mb-1">Location: <span className="font-normal">{job.location || 'N/A'}</span></div>
-                      <div className="text-gray-800 dark:text-gray-200 font-medium mb-1">Salary: <span className="font-normal">{job.salary || 'N/A'}</span></div>
-                      <div className="text-gray-700 dark:text-gray-300 mt-2 text-sm line-clamp-3">{job.jobDescription}</div>
-                      <div className="text-gray-700 dark:text-gray-300 mt-2 text-sm line-clamp-2">Requirements: {job.requirements}</div>
-                      <div className="text-xs text-gray-400 mt-2">Posted: {new Date(job.createdAt).toLocaleDateString()}</div>
+
+                    {/* Content */}
+                    <CardContent className="pt-6">
+                      {/* Job Details */}
+                      <div className="space-y-4 mb-6">
+                        <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                          <MapPin className="w-4 h-4 text-gray-500" />
+                          <span>{job.location || 'Remote'}</span>
+                        </div>
+                        
+                        {job.salary && (
+                          <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                            <DollarSign className="w-4 h-4 text-gray-500" />
+                            <span>{job.salary}</span>
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400">
+                          <Calendar className="w-4 h-4 text-gray-500" />
+                          <span>Posted {new Date(job.createdAt).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+
+                      {/* Description & Requirements */}
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Description</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed">
+                            {job.jobDescription}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <h4 className="font-semibold text-gray-900 dark:text-white mb-2">Requirements</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed">
+                            {job.requirements}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+                        <button
+                          onClick={() => { setSelectedJobId(job.id); setShowApplicants(true); }}
+                          className="flex-1 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                        >
+                          <Users className="w-4 h-4" />
+                          View Applicants
+                        </button>
+                        
+                        <button
+                          onClick={() => router.push(`/dashboard/${job.id}`)}
+                          className="flex-1 bg-green-50 hover:bg-green-100 dark:bg-green-900/30 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                        >
+                          <BarChart className="w-4 h-4" />
+                          Analytics
+                        </button>
+                      </div>
                     </CardContent>
-                  </Card>
-                ))}
-              </ul>
-            )}
-          </div>
-          <ApplicantListDialog open={showApplicants} onOpenChange={setShowApplicants} jobId={selectedJobId} />
-        </CardContent>
-      </Card>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Create/Edit Job Dialog */}
+      <Dialog open={showForm} onOpenChange={setShowForm}>
+        <DialogContent className="p-0 max-w-2xl">
+          <DialogTitle className="sr-only">{editJobId ? 'Edit Job' : 'Create Job'}</DialogTitle>
+          <Card className="shadow-strong border-0">
+            <CardHeader className="flex flex-row items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-700">
+              <CardTitle className="text-2xl font-bold">{editJobId ? 'Edit Job' : 'Create New Job'}</CardTitle>
+              <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors duration-200">
+                <X className="w-6 h-6" />
+              </button>
+            </CardHeader>
+            <CardContent className="p-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Job Name *</label>
+                    <input 
+                      name="jobName" 
+                      value={form.jobName} 
+                      onChange={handleChange} 
+                      placeholder="e.g., Senior Software Engineer" 
+                      className="input-enhanced" 
+                      required 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Job Role *</label>
+                    <input 
+                      name="jobRole" 
+                      value={form.jobRole} 
+                      onChange={handleChange} 
+                      placeholder="e.g., Software Development" 
+                      className="input-enhanced" 
+                      required 
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Job Description *</label>
+                  <textarea 
+                    name="jobDescription" 
+                    value={form.jobDescription} 
+                    onChange={handleChange} 
+                    placeholder="Describe the role, responsibilities, and what makes this position exciting..." 
+                    className="input-enhanced min-h-[120px] resize-none" 
+                    required 
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Requirements *</label>
+                  <textarea 
+                    name="requirements" 
+                    value={form.requirements} 
+                    onChange={handleChange} 
+                    placeholder="List the skills, experience, and qualifications needed..." 
+                    className="input-enhanced min-h-[100px] resize-none" 
+                    required 
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Location</label>
+                    <input 
+                      name="location" 
+                      value={form.location} 
+                      onChange={handleChange} 
+                      placeholder="e.g., San Francisco, CA or Remote" 
+                      className="input-enhanced" 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Salary Range</label>
+                    <input 
+                      name="salary" 
+                      value={form.salary} 
+                      onChange={handleChange} 
+                      placeholder="e.g., $80,000 - $120,000" 
+                      className="input-enhanced" 
+                    />
+                  </div>
+                </div>
+                
+                {error && (
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                    <div className="text-red-800 dark:text-red-200 text-sm">{error}</div>
+                  </div>
+                )}
+                
+                <div className="flex gap-4 justify-end pt-4 border-t border-gray-100 dark:border-gray-700">
+                  <button 
+                    type="button" 
+                    className="btn-secondary" 
+                    onClick={() => setShowForm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit" 
+                    className="btn-primary flex items-center gap-2" 
+                    disabled={loading}
+                  >
+                    {loading && <span className="loading-spinner"></span>}
+                    {editJobId ? 'Update Job' : 'Create Job'}
+                  </button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </DialogContent>
+      </Dialog>
+
+      {/* Applicants Dialog */}
+      <ApplicantListDialog open={showApplicants} onOpenChange={setShowApplicants} jobId={selectedJobId} />
     </div>
   );
 } 

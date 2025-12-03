@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from summarize_resume import summarize_resume
-import fitz  # PyMuPDF
+import fitz  
 from sentence_transformers import SentenceTransformer, util
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -12,7 +12,6 @@ genai.configure(api_key="AIzaSyCNnBduoWYaFI7qOFixuM6e9EKa2XVYj1I")
 
 app = FastAPI()
 
-# Allow CORS for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -21,7 +20,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load sentence embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def extract_text_from_pdf(file: UploadFile) -> str:
@@ -34,11 +32,9 @@ async def match_resume(
     resume: UploadFile = File(...),
     job_description: str = Form(...)
 ):
-    # Step 1: Extract and summarize resume
     resume_text = extract_text_from_pdf(resume)
     summary = summarize_resume(resume_text)
 
-    # Step 2: Compute similarity
     embeddings = model.encode([summary, job_description], convert_to_tensor=True)
     similarity = util.cos_sim(embeddings[0], embeddings[1]).item()
     score = round(similarity * 100, 2)
@@ -47,3 +43,12 @@ async def match_resume(
         "summary": summary,
         "match_score": score
     }
+
+@app.get("/")
+async def root():
+    return {"message": "Resume Scorer ML API is running!"}
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

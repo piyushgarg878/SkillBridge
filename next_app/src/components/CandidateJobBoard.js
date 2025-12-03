@@ -115,7 +115,6 @@ export default function CandidateJobBoard({ userId }) {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-transparent py-10 px-2 w-full">
-      {/* Welcome message outside the main card */}
       <div className="w-full max-w-5xl text-center mb-8 mt-2">
         <span className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white block">Welcome{candidate?.name ? `, ${candidate.name}` : ''}!</span>
         <span className="block text-lg text-gray-500 dark:text-gray-300 mt-2">Browse and apply to jobs below.</span>
@@ -145,7 +144,7 @@ export default function CandidateJobBoard({ userId }) {
                         <span className="text-xs text-blue-600 bg-blue-50 dark:bg-gray-800 dark:text-blue-300 rounded px-2 py-1 w-fit mt-1">Open</span>
                       </div>
                       <div className="flex gap-2 mt-1 flex-nowrap">
-                        <button className="bg-green-100 hover:bg-green-200 text-green-700 px-2 py-1 rounded flex items-center gap-1" onClick={() => handleApply(job.id)} disabled={appliedJobs.includes(job.id)} title="Apply">
+                        <button className="bg-green-100 hover:bg-green-200 text-green-700 px-2 py-1 rounded flex items-center gap-1" onClick={() => openApplyDialog(job)} disabled={appliedJobs.includes(job.id)} title="Apply">
                           <Send className="w-4 h-4" /> Apply
                         </button>
                         <button className="bg-blue-100 hover:bg-blue-200 text-blue-700 px-2 py-1 rounded flex items-center gap-1" onClick={() => router.push(`/dashboard/${job.id}`)} title="View Summary">
