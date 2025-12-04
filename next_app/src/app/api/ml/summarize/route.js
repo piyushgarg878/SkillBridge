@@ -29,7 +29,7 @@ export async function POST(req) {
 
     // Send to ML model
     console.log('[ML API] Sending to ML model...');
-    const mlRes = await fetch('http://localhost:8000/match', {
+    const mlRes = await fetch(process.env.ML_URL, {
       method: 'POST',
       body: form,
       headers: form.getHeaders(),
